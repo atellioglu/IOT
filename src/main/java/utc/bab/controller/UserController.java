@@ -1,5 +1,7 @@
 package utc.bab.controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,31 +11,64 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import utc.bab.model.User;
+import utc.bab.model.UserToken;
 import utc.bab.repository.UserRepository;
+import utc.bab.repository.UserTokenRepository;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 	@Autowired
 	UserRepository userRepository;
-	
-	@RequestMapping(value="/insert",method=RequestMethod.POST)
+	@Autowired
+	UserTokenRepository userTokenRepository;
+
+	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	public ResponseEntity<?> insertUser(@RequestBody User user) {
 		User existUser = userRepository.findByUserName(user.getUserName());
-		if(existUser!=null) {
+		if (existUser != null) {
 			return new ResponseEntity<User>(user, HttpStatus.BAD_REQUEST);
 		}
 		User usrInserted = userRepository.save(user);
 		return new ResponseEntity<User>(usrInserted, HttpStatus.OK);
 	}
-	@RequestMapping(value="/nameAvailable",method=RequestMethod.GET)
-	public ResponseEntity<?> isUserNameAvailable(@RequestBody User user){
+
+	@RequestMapping(value = "/name/available", method = RequestMethod.GET)
+	public ResponseEntity<?> isUserNameAvailable(@RequestBody User user) {
 		User existUser = userRepository.findByUserName(user.getUserName());
-		if(existUser!=null) {
+		if (existUser != null) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public ResponseEntity<?> login(@RequestBody User user) {
+		String token = UUID.randomUUID().toString().replace("-", "");
+		UserToken userToken;
+		User loginUser = userRepository.findByUserNameAndPassword(user.getUserName(), user.getPassword());
+		if (loginUser != null) {
+			System.out.println(token);
+			userToken = userTokenRepository.findByUserId(user.getId());
+			// TO DO : ileride tokena sure atamasi yapilacak ve tokeni olan kisinin suresi
+			// var mi kontrolu yapilacak.
+			if (userToken != null) {
+				System.out.println(token + "if de");
+				userToken.setToken(token);
+				userToken.setUserId(user.getId());
+				userToken = userTokenRepository.save(userToken);
+				return new ResponseEntity<>(userToken, HttpStatus.OK);
+			} else {
+				System.out.println(token + "else de");
+				userToken.setUserId(user.getId());
+				userToken.setToken(token);
+				userToken = userTokenRepository.save(userToken);
+				return new ResponseEntity<>(userToken, HttpStatus.OK);
+			}
+
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+	}
 
 }
