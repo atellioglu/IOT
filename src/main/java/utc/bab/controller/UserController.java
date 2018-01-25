@@ -47,28 +47,18 @@ public class UserController {
 		String token = UUID.randomUUID().toString().replace("-", "");
 		UserToken userToken;
 		User loginUser = userRepository.findByUserNameAndPassword(user.getUserName(), user.getPassword());
-		if (loginUser != null) {
-			System.out.println(token);
-			userToken = userTokenRepository.findByUserId(loginUser.getId());
-			// TODO : ileride tokena sure atamasi yapilacak ve tokeni olan kisinin suresi
-			// var mi kontrolu yapilacak.
-			if (userToken != null) {
-				//System.out.println(token + "if de");
-				userToken.setToken(token);
-				userToken.setUserId(loginUser.getId());
-				userToken = userTokenRepository.save(userToken);
-				return new ResponseEntity<>(userToken, HttpStatus.OK);
-			} else {
-				userToken = new UserToken();
-				//System.out.println(token + "else de");
-				userToken.setUserId(loginUser.getId());
-				userToken.setToken(token);
-				userToken = userTokenRepository.save(userToken);
-				return new ResponseEntity<>(userToken, HttpStatus.OK);
-			}
-		} else {
+		if(loginUser == null) 
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
+		System.out.println(token);
+		userToken = userTokenRepository.findByUserId(loginUser.getId());
+		// TODO : ileride tokena sure atamasi yapilacak ve tokeni olan kisinin suresi
+		// var mi kontrolu yapilacak.
+		if(userToken == null)
+			userToken = new UserToken();
+		userToken.setToken(token);
+		userToken.setUserId(loginUser.getId());
+		userToken = userTokenRepository.save(userToken);
+		return new ResponseEntity<>(userToken, HttpStatus.OK);
 	}
 
 }

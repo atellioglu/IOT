@@ -26,5 +26,18 @@ public class CompanyController {
 			Company insertedCompany = companyRepository.save(cmpny);
 			return new ResponseEntity<Company>(insertedCompany, HttpStatus.OK);
 	}
-
+	@RequestMapping("/getUser")
+	public ResponseEntity<?> getCompanyByUserId(String userToken){
+		//TODO user Id ile userin companysi getirilcek
+		return null;
+	}
+	
+	@RequestMapping(value="/getDevices", method=RequestMethod.GET)
+	public ResponseEntity<?> getDevicesByCompanyId(String userToken, int companyId){
+		//TODO Company id ye gore devicelari dondurcem.
+		//TODO devicelarin yaninda 
+		
+		return null;
+	}
+	
 }

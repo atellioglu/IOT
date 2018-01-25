@@ -22,16 +22,25 @@ public class DeviceValuesController {
 	@Autowired
 	DeviceValuesRepository valuesRepository;
 
-	@RequestMapping(value = "/show", method = RequestMethod.POST)
+	@RequestMapping(value = "/show", method = RequestMethod.GET)
 	public ResponseEntity<?> showValues(@RequestBody Sensors sensor) {
 		Sensors existSensor;
 		DeviceValues deviceValuesTop100;
-		existSensor = sensorRepository.findById(sensor.getDeviceId());
+		existSensor = sensorRepository.findById(sensor.getId());
 		if(existSensor != null) {
 			//TODO burada sensor id den top 100 getirelecek.
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+	}
+	@RequestMapping(value = "/insert",method= RequestMethod.POST)
+	public ResponseEntity<?> insertFromSocket(
+			String companyId, 
+			String deviceId, String pass, int hardwareId, int model, 
+			int functionId, int dataSize, String data){
+		//TODO  1 bu device sensors tablosunda yoksa ilk olarak ekle.
+		//TODO  2 gelen verileri deviceValues tablosuna yaz.
+	return null;	
 	}
 }

@@ -15,7 +15,7 @@ public class DeviceValues {
 	private int dataSize;
 	private Date date;
 	private int functionId;
-	private int deviceId;
+	private int sensorId;
 	public int getId() {
 		return id;
 	}
@@ -23,10 +23,10 @@ public class DeviceValues {
 		this.id = id;
 	}
 	public int getDeviceId() {
-		return deviceId;
+		return sensorId;
 	}
-	public void setDeviceId(int deviceId) {
-		this.deviceId = deviceId;
+	public void setDeviceId(int sensorId) {
+		this.sensorId = sensorId;
 	}
 	public String getData() {
 		return data;

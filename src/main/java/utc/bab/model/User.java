@@ -20,7 +20,6 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	private int companyId;
 	public int getId() {
 		return id;
 	}
@@ -51,11 +50,4 @@ public class User {
 	public void setRole(int role) {
 		this.role = role;
 	}
-	public int getCompanyId() {
-		return companyId;
-	}
-	public void setCompanyId(int companyId) {
-		this.companyId = companyId;
-	}
-	
 }
