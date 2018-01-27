@@ -9,5 +9,6 @@ import utc.bab.model.UserCompany;
 public interface UserCompanyRepository extends CrudRepository<UserCompany, Integer> {
 	
 	public UserCompany findByUserId(int usrId);
+	public UserCompany findByCompanyId(int compId);
 
 }

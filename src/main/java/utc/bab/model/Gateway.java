@@ -8,17 +8,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Sensors {
+public class Gateway {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private int companyId;
-	private String deviceId;
+	private int deviceId;//mac address
 	private int model;
 	private int hardwareId;
 	private String aliasName;
-	private int decimalPoint;
-	private int extensionId;
 	private Date requestDate;
 	
 	public Date getRequestDate() {
@@ -26,18 +24,6 @@ public class Sensors {
 	}
 	public void setRequestDate(Date requestDate) {
 		this.requestDate = requestDate;
-	}
-	public int getDecimalPoint() {
-		return decimalPoint;
-	}
-	public void setDecimalPoint(int decimalPoint) {
-		this.decimalPoint = decimalPoint;
-	}
-	public int getExtensionId() {
-		return extensionId;
-	}
-	public void setExtensionId(int extensionId) {
-		this.extensionId = extensionId;
 	}
 	public int getId() {
 		return id;
@@ -63,10 +49,10 @@ public class Sensors {
 	public void setCompanyId(int companyId) {
 		this.companyId = companyId;
 	}
-	public String getDeviceId() {
+	public int getDeviceId() {
 		return deviceId;
 	}
-	public void setDeviceId(String deviceId) {
+	public void setDeviceId(int deviceId) {
 		this.deviceId = deviceId;
 	}
 	public int getModel() {

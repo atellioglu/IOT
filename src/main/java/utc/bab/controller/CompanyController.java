@@ -9,13 +9,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import utc.bab.model.Company;
+import utc.bab.model.UserCompany;
+import utc.bab.model.UserToken;
 import utc.bab.repository.CompanyRepository;
+import utc.bab.repository.UserCompanyRepository;
+import utc.bab.repository.UserTokenRepository;
+import utc.bab.util.CustomException;
 
 @RestController
 @RequestMapping("/company")
 public class CompanyController {
 	@Autowired
 	CompanyRepository companyRepository;
+	@Autowired
+	UserCompanyRepository usrCompRepo;
+	@Autowired
+	UserTokenRepository usrTokenRepo;
 
 	@RequestMapping(value = "/insert", method=RequestMethod.POST)
 	public ResponseEntity<?> insertCompany(@RequestBody Company cmpny) {
@@ -28,16 +37,22 @@ public class CompanyController {
 	}
 	@RequestMapping("/getUser")
 	public ResponseEntity<?> getCompanyByUserId(String userToken){
-		//TODO user Id ile userin companysi getirilcek
-		return null;
+		UserToken usrToken;
+		Company company;
+		UserCompany usrCompany;
+		usrToken = usrTokenRepo.findByToken(userToken);
+		if(usrToken == null) {
+			return new ResponseEntity<CustomException>(new CustomException("Unavailable User"),HttpStatus.BAD_REQUEST);
+		}
+		usrCompany = usrCompRepo.findByUserId(usrToken.getUserId());
+		if(usrCompany == null) {
+			return new ResponseEntity<CustomException>(new CustomException("This user have no Company"),HttpStatus.BAD_REQUEST);
+		}
+		
+		company = companyRepository.findById(usrCompany.getCompanyId());
+		return new ResponseEntity<UserCompany>(usrCompany,HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/getDevices", method=RequestMethod.GET)
-	public ResponseEntity<?> getDevicesByCompanyId(String userToken, int companyId){
-		//TODO Company id ye gore devicelari dondurcem.
-		//TODO devicelarin yaninda 
-		
-		return null;
-	}
+
 	
 }

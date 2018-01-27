@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import utc.bab.model.DeviceValues;
-import utc.bab.model.Sensors;
+import utc.bab.model.SlaveValues;
+import utc.bab.model.Gateway;
 import utc.bab.repository.DeviceValuesRepository;
 import utc.bab.repository.SensorsRepository;
 
@@ -23,9 +23,9 @@ public class DeviceValuesController {
 	DeviceValuesRepository valuesRepository;
 
 	@RequestMapping(value = "/show", method = RequestMethod.GET)
-	public ResponseEntity<?> showValues(@RequestBody Sensors sensor) {
-		Sensors existSensor;
-		DeviceValues deviceValuesTop100;
+	public ResponseEntity<?> showValues(@RequestBody Gateway sensor) {
+		Gateway existSensor;
+		SlaveValues deviceValuesTop100;
 		existSensor = sensorRepository.findById(sensor.getId());
 		if(existSensor != null) {
 			//TODO burada sensor id den top 100 getirelecek.

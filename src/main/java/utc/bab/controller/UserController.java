@@ -14,6 +14,7 @@ import utc.bab.model.User;
 import utc.bab.model.UserToken;
 import utc.bab.repository.UserRepository;
 import utc.bab.repository.UserTokenRepository;
+import utc.bab.util.CustomException;
 
 @RestController
 @RequestMapping("/user")
@@ -34,12 +35,12 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/name/available", method = RequestMethod.GET)
-	public ResponseEntity<?> isUserNameAvailable(@RequestBody User user) {
-		User existUser = userRepository.findByUserName(user.getUserName());
+	public ResponseEntity<?> isUserNameAvailable(String usrName) {
+		User existUser = userRepository.findByUserName(usrName);
 		if (existUser != null) {
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
+			return new ResponseEntity<CustomException>(new CustomException("This User is not AVAILABLE"),HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<CustomException>(new CustomException(0,"This User is AVAILABLE"),HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -59,6 +60,17 @@ public class UserController {
 		userToken.setUserId(loginUser.getId());
 		userToken = userTokenRepository.save(userToken);
 		return new ResponseEntity<>(userToken, HttpStatus.OK);
+	}
+	@RequestMapping(value="/isTokenAlive", method=RequestMethod.GET)
+	public ResponseEntity<?> isTokenAlive(String token){
+		UserToken userToken;
+		User usr;
+		userToken = userTokenRepository.findByToken(token);
+		if(userToken == null) {
+			return new ResponseEntity<CustomException>(new CustomException("Unavailable Token"),HttpStatus.BAD_REQUEST);
+		}
+		usr = userRepository.findById(userToken.getUserId());
+		return new ResponseEntity<User>(usr,HttpStatus.OK);
 	}
 
 }
