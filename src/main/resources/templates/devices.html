@@ -1,0 +1,162 @@
+<html lang="tr">
+
+<head>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="main.css" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="request.js"></script>
+  <script src="index.js"></script>
+  <style>
+    #addDeviceModal {
+      color: rgb(45, 53, 61);
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <div class="nav-side-menu">
+    <div class="brand">Brand Logo</div>
+    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+
+    <div class="menu-list">
+
+      <ul id="menu-content" class="menu-content collapse out">
+        <li>
+          <a href="#" id="menuGeneral"><i class="fa fa-dashboard fa-lg"></i> Genel</a>
+        </li>
+        <li data-toggle="collapse" data-target="#products" class="collapsed active">
+          <a href="#" id="menuDevices"><i class="fa fa-gift fa-lg"></i> Cihazlar <span class="arrow"></span></a>
+        </li>
+        <ul class="sub-menu collapse" id="products">
+          <li><a href="#">Cihazlar</a></li>
+        </ul>
+        <li>
+          <a href="#" id="menuAlarms"><i class="fa fa-bell-o fa-lg"></i>Alarmlar</a>
+        </li>
+        <li>
+          <a href="#" id="menuDeviceConfigurations"><i class="fa fa-wrench fa-lg"></i>Cihaz Ayarları</a>
+        </li>
+        <li>
+          <a href="#" id="menuUsers"><i class="fa fa-users fa-lg"></i> Kullanıcılar</a>
+        </li>
+        <li>
+          <a href="#" id="menuAddDevice"><i class="fa fa-plus fa-lg"></i>Cihaz Ekle</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div style="margin-left:23%;">
+
+    <div class="container">
+      <h2>Cihazlar</h2>
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th>Takma İsim</th>
+            <th>Cihaz ID</th>
+            <th>Model</th>
+            <th>Şirket</th>
+            <th>Cihaz Tipi</th>
+            <th>Aksiyonlar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Buzdolabi</td>
+            <td>123123</td>
+            <td>9823749239</td>
+            <td>234234</td>
+            <td>Gateway</td>
+            <td><button class="btn btn-primary" title="Detay göster"><i class="fa fa-info fa-lg"></i></button> <button class="btn btn-success" title="Yeni bir cihaz ekle" data-toggle="modal" data-target="#addDeviceModal"><i class="fa fa-plus fa-lg"></i></button></td>
+          </tr>
+          <tr>
+            <td>Buzdolabi</td>
+            <td>123123</td>
+            <td>9823749239</td>
+            <td>234234</td>
+            <td>Slave</td>
+            <td><button class="btn btn-primary" title="Detay göster"><i class="fa fa-info fa-lg"></i></button> <button class="btn btn-success" disabled="disabled" data-toggle="modal" data-target="#addDeviceModal"><i class="fa fa-plus fa-lg"></i></button></td>
+          </tr>
+          <tr>
+            <td>Buzdolabi</td>
+            <td>123123</td>
+            <td>9823749239</td>
+            <td>234234</td>
+            <td>Gateway</td>
+            <td><button class="btn btn-primary" title="Detay göster"><i class="fa fa-info fa-lg"></i></button> <button class="btn btn-success" title="Yeni bir cihaz ekle" data-toggle="modal" data-target="#addDeviceModal"><i class="fa fa-plus fa-lg"></i></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="addDeviceModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+          <h4 class="modal-title" style="color:black;">Yeni Sorgu Ekle</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label>Modbus Cihaz ID</label>
+              <input class="form-control" name="modbusDeviceId" placeholder="Cihazınızın modbus ID'sini giriniz" />
+              <small class="form-text text-muted">1-254 arasında değer almalıdır</small>
+            </div>
+            <div class="form-group">
+              <label>Modbus Register Tipi</label>
+              <select class="form-control" name="modbusRegisterType">
+                 <option value="1">Coil</option>
+                 <option value="2">Discrete</option>
+                 <option value="3">Holding</option>
+                 <option value="4">Input</option>
+               </select>
+            </div>
+            <div class="form-group">
+              <label>Register Numarası</label>
+              <input class="form-control" name="registerNumber" placeholder="Modbus register numarasını buraya giriniz." />
+              <small class="form-text text-muted"></small>
+            </div>
+            <div class="form-group">
+              <label>Ondalık Gösterim</label>
+              <select class="form-control" name="modbusDecimalPoint">
+                 <option value="1">Değer x 1</option>
+                 <option value="2">Değer x 0.1</option>
+                 <option value="3">Değer x 0.01</option>
+                 <option value="4">Değer x 0.001</option>
+               </select>
+            </div>
+            <div class="form-group">
+              <label>Uzantı Tipi</label>
+              <select class="form-control" name="extensionType">
+                 <option value="1">Sıcaklık</option>
+                 <option value="2">Basınç</option>
+                 <option value="3">Akım</option>
+                 <option value="4">Nem</option>
+                 <option value="5">Voltaj</option>
+               </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-plus fa-lg"></i> Kaydet</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close fa-lg"></i> Çıkış Yap</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

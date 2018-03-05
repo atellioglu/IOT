@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import utc.bab.model.Slave;
 
 public interface SlaveRepository extends CrudRepository<Slave, Integer>{
-	List<Slave> findByGatewayId(int id);
+	List<Slave> findByGatewayIdOrderByIdDesc(int id);
 
 }

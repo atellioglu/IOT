@@ -16,7 +16,7 @@ public class SlaveController {
 	SlaveRepository slaveRepository;
 	@Autowired
 	GatewayRepository gatewayRepository;
-
+	
 	public ResponseEntity<?> insertSlave(Slave slave) {
 		slaveRepository.save(slave);
 

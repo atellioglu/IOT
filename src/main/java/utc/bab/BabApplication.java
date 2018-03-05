@@ -13,7 +13,6 @@ public class BabApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BabApplication.class, args);
 	}
-
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {

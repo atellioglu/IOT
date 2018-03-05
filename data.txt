@@ -1,0 +1,15 @@
+insert into company(name) VALUES("Test A.S.");
+insert into user(user_name,role,is_banned) VALUES("Tellioglu",1,0);
+insert into user_company(user_id,company_id) VALUES(1,1);
+insert into user_token(user_id,token) VALUES(1,'TESTTOKEN');
+insert into gateway(alias_name,company_id,device_id,hardware_id,model) VALUES("Gateway1",1,1,1,1);
+insert into gateway(alias_name,company_id,device_id,hardware_id,model) VALUES("Gateway2",1,2,2,1);
+insert into slave(alias,decimal_point,gateway_id,register_address,register_type,slave_id,type_id) VALUES("SLAVE1",1,1,23,1,42,1);
+insert into slave(alias,decimal_point,gateway_id,register_address,register_type,slave_id,type_id) VALUES("SLAVE2",1,1,23,1,42,1);
+insert into slave(alias,decimal_point,gateway_id,register_address,register_type,slave_id,type_id) VALUES("SLAVE3",1,1,23,1,42,2);
+insert into slave(alias,decimal_point,gateway_id,register_address,register_type,slave_id,type_id) VALUES("SLAVE4",1,1,23,1,42,3);
+insert into slave(alias,decimal_point,gateway_id,register_address,register_type,slave_id,type_id) VALUES("SLAVE5",1,1,23,1,42,1);
+insert into slave(alias,decimal_point,gateway_id,register_address,register_type,slave_id,type_id) VALUES("SLAVE6",1,2,23,1,42,2);
+insert into slave(alias,decimal_point,gateway_id,register_address,register_type,slave_id,type_id) VALUES("SLAVE1",1,2,23,1,42,1);
+insert into slave(alias,decimal_point,gateway_id,register_address,register_type,slave_id,type_id) VALUES("SLAVE1",1,1,23,1,42,3);
+insert into slave(alias,decimal_point,gateway_id,register_address,register_type,slave_id,type_id) VALUES("SLAVE1",1,1,23,1,42,4);

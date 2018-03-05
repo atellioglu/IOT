@@ -10,15 +10,20 @@ public class Slave {
 	@GeneratedValue
 	private int id;// database Id
 	private int slaveId;//modbusdan gelicek
-	private String alies;
+	private String alias;
 	private int registerAddress;//modbusdan gelecek!
 	private int registerType;//modbus
 	private int decimalPoint;//kullanici ekliycek
-	
 	private int typeId;// sicaklik, basinc vs...
-	
 	private int gatewayId;// Gateway ile baglantili veritabani tablosu 
+	private long requestThreshold; // sure, iki request arasindaki olmasi gereken zaman farki!
 	
+	public long getRequestThreshold() {
+		return requestThreshold;
+	}
+	public void setRequestThreshold(long requestThreshold) {
+		this.requestThreshold = requestThreshold;
+	}
 	public int getId() {
 		return id;
 	}
@@ -28,11 +33,11 @@ public class Slave {
 	public int getSlaveId() {
 		return slaveId;
 	}
-	public String getAlies() {
-		return alies;
+	public String getAlias() {
+		return alias;
 	}
-	public void setAlies(String alies) {
-		this.alies = alies;
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 	public void setSlaveId(int slaveId) {
 		this.slaveId = slaveId;

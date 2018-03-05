@@ -13,17 +13,38 @@ public class Gateway {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private int companyId;
-	private int deviceId;//mac address
+	private String deviceId;//mac address
 	private int model;
 	private int hardwareId;
 	private String aliasName;
-	private Date requestDate;
+	private long requestDate;
+	private Date lastRequestDate;
+	private long lng;
+	private long lat;
 	
-	public Date getRequestDate() {
+	public long getLng() {
+		return lng;
+	}
+	public void setLng(long lng) {
+		this.lng = lng;
+	}
+	public long getLat() {
+		return lat;
+	}
+	public void setLat(long lat) {
+		this.lat = lat;
+	}
+	public long getRequestDate() {
 		return requestDate;
 	}
-	public void setRequestDate(Date requestDate) {
+	public void setRequestDate(long requestDate) {
 		this.requestDate = requestDate;
+	}
+	public Date getLastRequestDate() {
+		return lastRequestDate;
+	}
+	public void setLastRequestDate(Date lastRequestDate) {
+		this.lastRequestDate = lastRequestDate;
 	}
 	public int getId() {
 		return id;
@@ -49,10 +70,10 @@ public class Gateway {
 	public void setCompanyId(int companyId) {
 		this.companyId = companyId;
 	}
-	public int getDeviceId() {
+	public String getDeviceId() {
 		return deviceId;
 	}
-	public void setDeviceId(int deviceId) {
+	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
 	}
 	public int getModel() {

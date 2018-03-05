@@ -1,0 +1,158 @@
+<html lang="tr">
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="main.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="request.js"></script>
+  <script src="index.js"></script>
+</head>
+
+<body>
+
+
+  <div class="nav-side-menu">
+    <div class="brand">Brand Logo</div>
+    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+
+    <div class="menu-list">
+
+      <ul id="menu-content" class="menu-content collapse out">
+        <li>
+          <a href="#" id="menuGeneral"><i class="fa fa-dashboard fa-lg"></i> Genel</a>
+        </li>
+        <li data-toggle="collapse" data-target="#products" class="collapsed active">
+          <a href="#" id="menuDevices"><i class="fa fa-gift fa-lg"></i> Cihazlar <span class="arrow"></span></a>
+        </li>
+        <ul class="sub-menu collapse" id="products">
+          <li><a href="#">Cihazlar</a></li>
+        </ul>
+        <li>
+          <a href="#" id="menuAlarms"><i class="fa fa-bell-o fa-lg"></i>Alarmlar</a>
+        </li>
+        <li>
+          <a href="#" id="menuDeviceConfigurations"><i class="fa fa-wrench fa-lg"></i>Cihaz Ayarları</a>
+        </li>
+        <li>
+          <a href="#" id="menuUsers"><i class="fa fa-users fa-lg"></i> Kullanıcılar</a>
+        </li>
+        <li>
+          <a href="#" id="menuAddDevice"><i class="fa fa-plus fa-lg"></i>Cihaz Ekle</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div style="margin-left:23%;">
+
+    <div class="row" style="margin-top:30px;">
+      <div class="boxHeader">
+        <span>Bağlı Cihazlar</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 box3">
+        <div>
+
+          <div class="col-sm-6">
+            <div class="boxHeader">
+              <span>Alias</span>
+            </div>
+            <div class="blueRing">
+              <span class="ringTextBlue">
+                <i class="fa fa-thermometer fa-lg"></i>
+              </span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-right boxInfoSpan" style="margin-top:2px;">14:32 12.10.2018</span>
+            <div style="margin-top:60px;">
+              <span class="boxInfoCenterSpan">73</span> <span class="boxInfoCenterSpan">&#8451;</span></br>
+              <span class="text-right boxInfoSpan">155</span></br>
+              <span class="text-right boxInfoSpan">Holding Register</span></br>
+              <span class="text-right boxInfoSpan">0x02</span></br>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4 box3">
+        <div>
+          <div class="col-sm-6">
+            <div class="boxHeader">
+              <span>Alias</span>
+            </div>
+            <div class="blueRing">
+              <span class="ringTextBlue">
+                <i class="fa fa-dashboard fa-lg"></i>
+              </span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div style="margin-top:80px;">
+              <span class="boxInfoCenterSpan">73 </span> <span class="boxInfoCenterSpan">P</span></br>
+              <span class="text-right boxInfoSpan">155</span></br>
+              <span class="text-right boxInfoSpan">Holding Register</span></br>
+              <span class="text-right boxInfoSpan">0x02</span></br>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <canvas id="line-chart" width="700" height="300"></canvas>
+    </div>
+
+  </div>
+</body>
+
+<script>
+  new Chart(document.getElementById("line-chart"), {
+    type: 'line',
+    data: {
+      labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
+      datasets: [{
+        data: [86, 114, 106, 106, 107, 111, 133, 221, 783, 2478],
+        label: "Africa",
+        borderColor: "#3e95cd",
+        fill: false
+      }, {
+        data: [282, 350, 411, 502, 635, 809, 947, 1402, 3700, 5267],
+        label: "Asia",
+        borderColor: "#8e5ea2",
+        fill: false
+      }, {
+        data: [168, 170, 178, 190, 203, 276, 408, 547, 675, 734],
+        label: "Europe",
+        borderColor: "#3cba9f",
+        fill: false
+      }, {
+        data: [40, 20, 10, 16, 24, 38, 74, 167, 508, 784],
+        label: "Latin America",
+        borderColor: "#e8c3b9",
+        fill: false
+      }, {
+        data: [6, 3, 2, 2, 7, 26, 82, 172, 312, 433],
+        label: "North America",
+        borderColor: "#c45850",
+        fill: false
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'World population per region (in millions)'
+      }
+    }
+  });
+</script>
+
+</html>
