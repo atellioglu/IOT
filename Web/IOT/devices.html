@@ -1,0 +1,364 @@
+<div style="margin-left:23%;">
+
+  <div class="container">
+    <div style="position:absolute; right:10;top:30;">
+      <button class="btn btn-default" data-toggle="modal" data-target="#addGatewayModal" title="Mesaj Gonder"><i class="fa fa-plus fa-lg"></i> Yeni Cihaz Ekle</button>
+    </div>
+
+    <h2>Cihazlar</h2>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Takma İsim</th>
+          <th>Cihaz ID</th>
+          <th>Model</th>
+          <th>Şirket</th>
+          <th>Slave Sayisi</th>
+          <th>Calisma Durumu</th>
+          <th>Aksiyonlar</th>
+        </tr>
+      </thead>
+      <tbody id="devicesTableBody">
+        <tr>
+          <td>Buzdolabi</td>
+          <td>123123</td>
+          <td>9823749239</td>
+          <td>234234</td>
+          <td>Gateway</td>
+          <td><button class="btn btn-primary" title="Detay göster"><i class="fa fa-info fa-lg"></i></button> <button class="btn btn-success" title="Yeni bir cihaz ekle" data-toggle="modal" data-target="#addDeviceModal"><i class="fa fa-plus fa-lg"></i></button></td>
+        </tr>
+        <tr>
+          <td>Buzdolabi</td>
+          <td>123123</td>
+          <td>9823749239</td>
+          <td>234234</td>
+          <td>Slave</td>
+          <td><button class="btn btn-primary" title="Detay göster"><i class="fa fa-info fa-lg"></i></button> <button class="btn btn-success" disabled="disabled" data-toggle="modal" data-target="#addDeviceModal"><i class="fa fa-plus fa-lg"></i></button></td>
+        </tr>
+        <tr>
+          <td>Buzdolabi</td>
+          <td>123123</td>
+          <td>9823749239</td>
+          <td>234234</td>
+          <td>Gateway</td>
+          <td><button class="btn btn-primary" title="Detay göster"><i class="fa fa-info fa-lg"></i></button> <button class="btn btn-default" title="Mesaj Gonder"><i class="fa fa-envelope fa-lg"></i></button> <button class="btn btn-success" title="Yeni bir cihaz ekle"
+              data-toggle="modal" data-target="#addDeviceModal"><i class="fa fa-plus fa-lg"></i></button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABv04avhEQkFHaaQkUAej6qBEiMJnRT6Q&callback=initMap"></script>
+<div id="addGatewayModal" class="modal fade" role="dialog">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+        <h4 class="modal-title" style="color:black;">Yeni Gateway Ekle</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="cihazTakmaAdı" style="color:black">Takma İsim</label>
+            <input type="text" class="form-control" name="modbusAliasName" placeholder="Cihazın takma adını buraya giriniz." />
+            <small id="emailHelp" class="form-text text-muted">Takma isim cihazlarınızı tanımada size yardımcı olur.</small>
+          </div>
+          <div class="form-group">
+            <label for="modbusDeviceType" style="color:black">Cihaz Tipi</label>
+            <select class="form-control" id="exampleFormControlSelect1">
+             <option>Gateway</option>
+             <option>Self-Control</option>
+           </select>
+          </div>
+          <div class="form-group">
+            <label for="cihazTakmaAdı" style="color:black">Cihaz MAC Adresi</label>
+            <input type="text" class="form-control" placeholder="Cihazın mac adresini buraya giriniz." />
+            <small class="form-text text-muted">Cihazın mac adresi, sistemin cihazı tanımlamasına yardımcı olur.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="exampleFormControlSelect1" style="color:black">Cihaz Modeli Seçiniz</label>
+            <select class="form-control" id="slaveModelSelect">
+             <option value="1">EDT2411A</option>
+             <option value="2">EDT2411B</option>
+             <option value="3">EDT2411A</option>
+           </select>
+          </div>
+          <div class="form-group">
+            <button type="button" onclick="btnShowMapOnClick();" class="btn btn-default"><i class="fa fa-map-marker"></i>  Cihaz konumu seç</button>
+          </div>
+          <div class="form-group">
+            <div id="map" style="height:400px;width:100%;"></div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="return modalAddButtonClick();" class="btn btn-success" data-dismiss="modal"><i class="fa fa-plus fa-lg"></i> Kaydet</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close fa-lg"></i> Çıkış Yap</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var marker;
+    var markerPosition;
+    var map;
+    var mapIsVisible = false;
+    $(document).ready(function() {
+      $("#map").hide();
+    });
+
+    function btnShowMapOnClick() {
+      mapIsVisible = !mapIsVisible;
+      if (mapIsVisible) {
+        $("#map").show();
+        initMap();
+        if (marker != undefined && markerPosition != undefined) {
+          placeMarker(markerPosition, map);
+        }
+
+      } else {
+        $("#map").hide();
+      }
+      return false;
+    }
+
+    function initMap() {
+      var uluru = {
+        lat: 41.015137,
+        lng: 28.979530
+      };
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: uluru
+      });
+      google.maps.event.addListener(map, 'click', function(event) {
+        placeMarker(event.latLng, map);
+      });
+    }
+
+    function placeMarker(position, map) {
+      if (marker != undefined)
+        marker.setMap(null);
+      marker = new google.maps.Marker({
+        position: position,
+        map: map,
+      });
+      markerPosition = position;
+      map.panTo(position);
+    }
+  </script>
+</div>
+<div id="addDeviceModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+        <h4 class="modal-title" style="color:black;">Yeni Sorgu Ekle</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Takma İsim</label>
+            <input class="form-control" name="slaveAlias" placeholder="Cihazın takma adını buraya giriniz." />
+            <small id="emailHelp" class="form-text text-muted">Takma isim cihazlarınızı tanımada size yardımcı olur.</small>
+          </div>
+          <div class="form-group">
+            <label>Modbus Cihaz ID</label>
+            <input class="form-control" name="slaveModbusId" placeholder="Cihazınızın modbus ID'sini giriniz" />
+            <small class="form-text text-muted">1-254 arasında değer almalıdır</small>
+          </div>
+          <div class="form-group">
+            <label>Modbus Register Tipi</label>
+            <select class="form-control" name="slaveRegisterType">
+                 <option value="1">Coil</option>
+                 <option value="2">Discrete</option>
+                 <option value="3">Holding</option>
+                 <option value="4">Input</option>
+               </select>
+          </div>
+          <div class="form-group">
+            <label>Register Numarası</label>
+            <input class="form-control" name="slaveRegisterNumber" placeholder="Modbus register numarasını buraya giriniz." />
+            <small class="form-text text-muted"></small>
+          </div>
+          <div class="form-group">
+            <label>Ondalık Gösterim</label>
+            <select class="form-control" name="slaveDecimalPoint">
+                 <option value="1">Değer x 1</option>
+                 <option value="2">Değer x 0.1</option>
+                 <option value="3">Değer x 0.01</option>
+                 <option value="4">Değer x 0.001</option>
+               </select>
+          </div>
+          <div class="form-group">
+            <label>Uzantı Tipi</label>
+            <select class="form-control" name="slaveExtensionType">
+                 <option value="1">Sıcaklık</option>
+                 <option value="2">Basınç</option>
+                 <option value="3">Akım</option>
+                 <option value="4">Nem</option>
+                 <option value="5">Voltaj</option>
+               </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="return modalAddSlaveButtonClick();" class="btn btn-success" data-dismiss="modal"><i class="fa fa-plus fa-lg"></i> Kaydet</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close fa-lg"></i> Çıkış Yap</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    loadTable();
+  });
+
+  function loadTable() {
+    getRequest("gateway/list?token=" + token, function(data) {
+      $("#devicesTableBody").html("");
+      $.each(data, function(index) {
+        $("#devicesTableBody").append(rowString(data[index]));
+        $(".addSlaveButton").click(function() {
+          var gatewayId = $(this).data('gatewayid');
+          selectedGatewayId = gatewayId;
+        });
+      });
+    }, function(error) {
+      console.log(error);
+      notificate('HATA', 'Liste yuklenemedi', 'danger');
+    });
+  }
+
+  function rowString(elem) {
+    var html = "<tr class= " + getBackgroundClass(elem["status"]) + " style='color:black;'>";
+    if (elem["aliasName"] !== undefined) {
+      html += "<td>" + elem["aliasName"] + "</td>";
+    } else {
+      html += "<td>" + elem["deviceId"] + "</td>";
+    }
+    html += "<td>" + elem["deviceId"] + "</td>";
+    html += "<td>" + elem["model"] + "</td>";
+    html += "<td>" + elem["company"]["name"] + "</td>";
+    html += "<td>" + elem["slaves"].length + " </td>";
+    html += "<td>" + getCalismaDurumu(elem["status"]) + "</td>";
+    html += getActionButtons(elem["id"]);
+    html += "</tr>";
+    return html;
+  }
+
+
+  function getBackgroundClass(status) {
+    switch (status) {
+      case "UNKNOWN":
+        return "warning";
+      case "WORKING":
+        return "success";
+      case "BROKEN":
+        return "danger";
+    }
+  }
+
+  function getCalismaDurumu(status) {
+    switch (status) {
+      case "UNKNOWN":
+        return "BİLİNMİYOR";
+      case "WORKING":
+        return "ÇALIŞIYOR";
+      case "BROKEN":
+        return "ÇALIŞMIYOR";
+    }
+  }
+
+  function getActionButtons(gatewayId) {
+    var html = "";
+    html += '<td><button class="btn btn-primary" title="Detay göster"><i class="fa fa-info fa-lg"></i></button> ';
+    html += '<button class="btn btn-default" title="Mesaj Gonder"><i class="fa fa-envelope fa-lg"></i></button> ';
+    html += '<button class="btn btn-success addSlaveButton" data-gatewayId="' + gatewayId + '" title="Yeni bir cihaz ekle" data-toggle="modal" data-target="#addDeviceModal"><i class="fa fa-plus fa-lg"></i></button></td>'
+    return html;
+  }
+
+  function tableAddSlaveClick(button) {
+    var btn = $(button);
+    console.log(btn.title);
+    var btntitle = btn.title;
+    selectedGatewayId = $(button).data("gatewayId");
+    console.log("clicklendim");
+    console.log(selectedGatewayId);
+    debugger;
+  }
+
+  function modalAddButtonClick() {
+
+    var modbusDeviceId = $("input[name=modbusDeviceId]").val();
+    var modbusAliasName = $("input[name=modbusAliasName]").val();
+    var modbusRegisterType = $("select[name=modbusRegisterType]").val();
+    var modbusDecimalPoint = $("select[name=modbusDecimalPoint]").val();
+    var registerNumber = $("input[name=registerNumber]").val();
+    var extensionType = $("select[name=extensionType]").val();
+
+    console.log(modbusDeviceId);
+    console.log(modbusRegisterType);
+    if (marker != undefined) {
+      var lat = marker.getPosition().lat();
+      var lng = marker.getPosition().lng();
+    }
+    var reqData = {
+      'aliasName': modbusAliasName,
+      'lat': lat,
+      'lng': lng,
+      'modelId': 0,
+    };
+    var data = {
+      'gateway': reqData,
+      'token': token,
+
+    };
+    request("gateway/insert", function(success) {
+      loadTable();
+      console.log(success);
+    }, "post", data, function(error) {
+      console.log(error);
+    });
+    return false;
+  }
+
+  function modalAddSlaveButtonClick() {
+    var gatewayId = selectedGatewayId;
+    debugger;
+    var alias = $("input[name=slaveAlias]").val();
+    var slaveModbusId = $("input[name=slaveModbusId]").val();
+    var slaveRegisterType = $("select[name=slaveRegisterType]").val();
+    var slaveRegisterNumber = $("input[name=slaveRegisterNumber]").val();
+    var slaveDecimalPoint = $("select[name=slaveDecimalPoint]").val();
+    var slaveExtensionType = $("select[name=slaveExtensionType]").val();
+    var slaveRequest = {
+      'alias': alias,
+      'slaveId': slaveModbusId,
+      'registerType': slaveRegisterType,
+      'registerNumber': slaveRegisterNumber,
+      'decimalPoint': slaveDecimalPoint,
+      'extensionType': slaveExtensionType,
+      'gatewayId': gatewayId,
+    };
+    var data = {
+      'slave': slaveRequest,
+      'token': token,
+    };
+    request("slave/insert", function(success) {
+      loadTable();
+      notificate('Bir Cihaz Eklendi', 'Cihaz ekleme basarili', 'success');
+    }, "post", data, function(error) {
+      console.log(error);
+      notificate('HATA', 'Bir hata olustu', 'danger');
+    });
+    return false;
+  }
+</script>

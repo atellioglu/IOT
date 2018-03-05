@@ -1,0 +1,66 @@
+<div class="nav-side-menu">
+  <div id="brandDiv" class="brand">IOT</div>
+  <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+
+  <div class="menu-list">
+    <ul id="menu-content" class="menu-content collapse out">
+      <li class="active" data-file="dashboard.html">
+        <i class="fa fa-dashboard fa-lg"></i> Genel
+      </li>
+      <li data-toggle="collapse" data-target="#subDevices" class="collapsed" data-file="devices.html">
+        <i class="fa fa-gift fa-lg"></i> Gateway Cihazlar <span class="arrow"></span>
+      </li>
+      <ul class="sub-menu collapse" id="subDevices">
+      </ul>
+      <li data-file="alarms.html">
+        <i class="fa fa-bell-o fa-lg"></i>Alarmlar
+      </li>
+      <li data-file="device_config.html">
+        <i class="fa fa-wrench fa-lg" id="menuDeviceConfigurations"></i>Cihaz Ayarları
+      </li>
+      <li data-file="users.html">
+        <i id="menuUsers" class="fa fa-users fa-lg"></i> Kullanıcılar
+      </li>
+      <li data-file="addDevice.html">
+        <i class="fa fa-plus fa-lg" id="menuAddDevice"></i>Cihaz Ekle
+      </li>
+    </ul>
+  </div>
+</div>
+<script src="request.js"></script>
+<script>
+  $(document).ready(function() {
+    getRequest("gateway/list?token=" + token, function(data) {
+      $.each(data, function(index) {
+        if (data[index]["aliasName"] != undefined) {
+          appendToMenu(data[index]["aliasName"]);
+        } else {
+          appendToMenu(data[index]["deviceId"], true);
+        }
+      });
+    }, function(error) {
+      console.log(error);
+    });
+    $("#menu-content li").click(function(e) {
+      activeMenu($(this).data("file"));
+      $(this).addClass("active");
+
+    });
+  });
+
+  function clearMenuActive() {
+    $("#menu-content li").removeClass("active");
+  }
+
+  function activeMenu(containerFileName) {
+    clearMenuActive();
+    loadContainer(containerFileName);
+  }
+
+  function appendToMenu(name, warning) {
+    if (warning == undefined) {
+      $("#subDevices").append("<li>" + name + "</li>");
+    }
+
+  }
+</script>
