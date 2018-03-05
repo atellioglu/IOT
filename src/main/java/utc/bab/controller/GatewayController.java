@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import utc.bab.model.Company;
 import utc.bab.model.Gateway;
+import utc.bab.model.GatewayModel;
 import utc.bab.model.Slave;
 import utc.bab.model.dto.GatewayDTO;
 import utc.bab.repository.GatewayRepository;
 import utc.bab.repository.SlaveRepository;
 import utc.bab.repository.UserRepository;
 import utc.bab.repository.UserTokenRepository;
+import utc.bab.service.GatewayModelService;
 import utc.bab.service.GatewayService;
 import utc.bab.service.UserService;
 
@@ -37,6 +39,8 @@ public class GatewayController {
 	SlaveRepository slaveRepository;
 	@Autowired
 	GatewayService gatewayService;
+	@Autowired
+	GatewayModelService gatewayModelService;
 	@RequestMapping(value="/list",method=RequestMethod.GET)
 	public Iterable<GatewayDTO> list(String token){
 		 return gatewayService.getGatewaysFromUserToken(token);
@@ -59,7 +63,7 @@ public class GatewayController {
 		gateway.setAliasName(aliasName);
 		gateway.setLat(lat);
 		gateway.setLng(lng);
-		gateway.setModel(model);
+		gateway.setModel(gatewayModelService.getGatewayModel(model));
 		gateway.setCompanyId(companyFromToken.getId());
 		gateway.setRequestDate(requestTime);
 		gateway = gatewayService.save(gateway);

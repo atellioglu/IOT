@@ -77,6 +77,7 @@ public class IndexController {
 		if(gateway != null) {
 			gateway.setLastRequestDate(new Date());
 			gatewayRepository.save(gateway);
+			
 			//hallet iste geri kalan veriyi de...
 		}else {
 			companyLogService.save(company, Messages.GATEWAY_NOT_INSERTED,socketModel.getDeviceId());

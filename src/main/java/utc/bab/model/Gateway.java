@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Gateway {
@@ -14,7 +15,9 @@ public class Gateway {
 	private int id;
 	private int companyId;
 	private String deviceId;//mac address
-	private int model;//EDT2411A
+	
+	@ManyToOne(targetEntity=GatewayModel.class)
+	private GatewayModel model;//EDT2411A
 	private int hardwareId; //gateway mi self-control mu 
 	private String aliasName;
 	private long requestDate;
@@ -87,10 +90,11 @@ public class Gateway {
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
 	}
-	public int getModel() {
+	public GatewayModel getModel() {
 		return model;
 	}
-	public void setModel(int model) {
+	public void setModel(GatewayModel model) {
 		this.model = model;
 	}
+	
 }

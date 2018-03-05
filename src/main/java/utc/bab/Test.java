@@ -9,10 +9,12 @@ import org.springframework.stereotype.Component;
 
 import utc.bab.model.Company;
 import utc.bab.model.Gateway;
+import utc.bab.model.GatewayModel;
 import utc.bab.model.User;
 import utc.bab.model.UserCompany;
 import utc.bab.repository.CompanyRepository;
 import utc.bab.repository.DeviceValuesRepository;
+import utc.bab.repository.GatewayModelRepository;
 import utc.bab.repository.GatewayRepository;
 import utc.bab.repository.UserCompanyRepository;
 import utc.bab.repository.UserRepository;
@@ -30,6 +32,8 @@ public class Test {
 	UserCompanyRepository userCompanyRepository;
 	@Autowired
 	DeviceValuesRepository deviceValuesRepository;
+	@Autowired
+	GatewayModelRepository gatewayModelRepository;
     @PostConstruct
     public void init(){
 		logger.info("Test class init");
@@ -54,7 +58,15 @@ public class Test {
 		client2.setRequestDate(1000 * 15);
 		client2.setDeviceId("XXXYZ2");
 		client2.setCompanyId(company.getId());
-		client2.setModel(8);
+		
 		client2 = gatewayRepository.save(client2);
+    }
+    @PostConstruct
+    public void insertGatewayModels() {
+    		for(int i =0;i<10;i++) {
+    			GatewayModel gatModel = new GatewayModel();
+    			gatModel.setName("EDT2411"+String.valueOf('A' + i));
+    			gatewayModelRepository.save(gatModel);
+    		}
     }
 }

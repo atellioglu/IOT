@@ -5,6 +5,7 @@ import java.util.List;
 
 import utc.bab.model.Company;
 import utc.bab.model.Gateway;
+import utc.bab.model.GatewayModel;
 import utc.bab.model.Slave;
 import utc.bab.util.DeviceStatus;
 
@@ -13,7 +14,7 @@ public class GatewayDTO {
 	private int id;
 	private Company company;
 	private String deviceId;//mac address
-	private int model;
+	private GatewayModel model;
 	private int hardwareId;
 	private String aliasName;
 	private long requestDate;
@@ -63,11 +64,11 @@ public class GatewayDTO {
 		this.deviceId = deviceId;
 	}
 
-	public int getModel() {
+	public GatewayModel getModel() {
 		return model;
 	}
 
-	public void setModel(int model) {
+	public void setModel(GatewayModel model) {
 		this.model = model;
 	}
 
