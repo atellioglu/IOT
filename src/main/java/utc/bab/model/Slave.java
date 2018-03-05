@@ -9,14 +9,15 @@ public class Slave {
 	@Id
 	@GeneratedValue
 	private int id;// database Id
-	private int slaveId;//modbusdan gelicek
+	private int slaveId;//modbusdan gelicek (1-254 arasi deger gelecek)
 	private String alias;
 	private int registerAddress;//modbusdan gelecek!
-	private int registerType;//modbus
+	private int registerType;//modbus (COIL,DISCRETE,INPUT,HOLDING)
 	private int decimalPoint;//kullanici ekliycek
 	private int typeId;// sicaklik, basinc vs...
 	private int gatewayId;// Gateway ile baglantili veritabani tablosu 
 	private long requestThreshold; // sure, iki request arasindaki olmasi gereken zaman farki!
+	private long lastRequestDate;
 	
 	public long getRequestThreshold() {
 		return requestThreshold;
@@ -72,4 +73,11 @@ public class Slave {
 	public void setGatewayId(int gatewayId) {
 		this.gatewayId = gatewayId;
 	}
+	public long getLastRequestDate() {
+		return lastRequestDate;
+	}
+	public void setLastRequestDate(long lastRequestDate) {
+		this.lastRequestDate = lastRequestDate;
+	}
+	
 }

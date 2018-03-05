@@ -128,21 +128,26 @@ public class IndexController {
 			for(int j =0 ;j<slaves.size();j++) {
 				Slave slave = slaves.get(j);
 				SlaveValues slaveValues = slaveValuesRepository.findLatestSlaveId(slave.getId());
-				Date requestedDate = slaveValues.getDate();
-				long threshedTime = dateNow.getTime() - requestedDate.getTime();
-				if(threshedTime > slave.getRequestThreshold()) {
-					//sure cok bozulmus olabilir
-					if(threshedTime > slave.getRequestThreshold() * 2) {
-						//kesin gecikmis!
-						companyDeviceInfo.setBrokenSlaveCount(companyDeviceInfo.getBrokenSlaveCount() + 1);
+				if(slaveValues != null) {
+					Date requestedDate = slaveValues.getDate();
+					long threshedTime = dateNow.getTime() - requestedDate.getTime();
+					if(threshedTime > slave.getRequestThreshold()) {
+						//sure cok bozulmus olabilir
+						if(threshedTime > slave.getRequestThreshold() * 2) {
+							//kesin gecikmis!
+							companyDeviceInfo.setBrokenSlaveCount(companyDeviceInfo.getBrokenSlaveCount() + 1);
+						}else {
+							//bekliyor
+							companyDeviceInfo.setUnknownSlaveCount(companyDeviceInfo.getUnknownSlaveCount() + 1);
+						}
 					}else {
-						//bekliyor
-						companyDeviceInfo.setUnknownSlaveCount(companyDeviceInfo.getUnknownSlaveCount() + 1);
+						//sure az calisiyo
+						companyDeviceInfo.setWorkingSlaveCount(companyDeviceInfo.getWorkingSlaveCount() + 1);
 					}
 				}else {
-					//sure az calisiyo
-					companyDeviceInfo.setWorkingSlaveCount(companyDeviceInfo.getWorkingSlaveCount() + 1);
+					companyDeviceInfo.setUnknownSlaveCount(companyDeviceInfo.getUnknownSlaveCount() + 1);
 				}
+				
 			}
 		}
 		return new ResponseEntity<CompanyDeviceInfoDTO>(companyDeviceInfo, HttpStatus.OK);

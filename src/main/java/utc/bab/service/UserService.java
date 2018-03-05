@@ -3,8 +3,6 @@ package utc.bab.service;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import utc.bab.model.Company;
@@ -13,7 +11,6 @@ import utc.bab.model.UserToken;
 import utc.bab.repository.CompanyRepository;
 import utc.bab.repository.UserCompanyRepository;
 import utc.bab.repository.UserTokenRepository;
-import utc.bab.util.CustomException;
 
 @Service
 public class UserService {

@@ -14,25 +14,36 @@ public class Gateway {
 	private int id;
 	private int companyId;
 	private String deviceId;//mac address
-	private int model;
-	private int hardwareId;
+	private int model;//EDT2411A
+	private int hardwareId; //gateway mi self-control mu 
 	private String aliasName;
 	private long requestDate;
 	private Date lastRequestDate;
-	private long lng;
-	private long lat;
+	private Double lng;
+	private Double lat;
 	
-	public long getLng() {
+	
+	public Double getLng() {
 		return lng;
 	}
-	public void setLng(long lng) {
-		this.lng = lng;
+	public void setLng(Double lng) {
+		if(lng.isNaN()) {
+			this.lng = null;
+		}else {
+			this.lng = lng;	
+		}
+		
 	}
-	public long getLat() {
+	public Double getLat() {
 		return lat;
 	}
-	public void setLat(long lat) {
-		this.lat = lat;
+	public void setLat(Double lat) {
+		if(lat.isNaN()) {
+			this.lat = null;
+		}else {
+			this.lat = lat;
+		}
+			
 	}
 	public long getRequestDate() {
 		return requestDate;

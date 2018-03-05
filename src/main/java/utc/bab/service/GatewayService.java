@@ -44,9 +44,13 @@ public class GatewayService {
 		}
 		return dtoList;
 	}
+	public Gateway save(Gateway gateway) {
+		return gatewayRepository.save(gateway);
+	}
 	public Gateway findByCompanyIdAndDeviceId(int companyId,String deviceId) {
 		return gatewayRepository.findByCompanyIdAndDeviceId(companyId,deviceId);
 	}
+	
 	public DeviceStatus getGatewayStatus(Gateway gateway) {
 		if(gateway.getLastRequestDate() == null)
 			return DeviceStatus.UNKNOWN;
