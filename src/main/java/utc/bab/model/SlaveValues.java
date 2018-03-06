@@ -5,6 +5,9 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class SlaveValues {
@@ -16,20 +19,22 @@ public class SlaveValues {
 	
 	private Date date; // gelen tarih!
 	
-	private int slaveId;//slave veritabanindan!
+	@ManyToOne(targetEntity=Slave.class)
+	@JsonIgnore
+	private Slave slave;//slave veritabanindan!
 	
 	
+	public Slave getSlave() {
+		return slave;
+	}
+	public void setSlave(Slave slave) {
+		this.slave = slave;
+	}
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
-	public int getSlaveId() {
-		return slaveId;
-	}
-	public void setSlaveId(int slaveId) {
-		this.slaveId = slaveId;
 	}
 	public String getData() {
 		return data;

@@ -13,4 +13,5 @@ public class SlaveService {
 	public Slave save(Slave slave) {
 		return slaveRepository.save(slave);
 	}
+	
 }

@@ -47,12 +47,16 @@ function getInfo(data){
       $("#unknownSlaveSpan").text(success["unknownSlaveCount"]);
       $("#brokenSlaveSpan").text(success["brokenSlaveCount"]);
       $("#brandDiv").text(success["company"]["name"]);
+      $("#brandIcon").attr('src',success["company"]["iconUrl"]);
       $("#totalAlarmCountSpan").text(success["totalAlarmCount"]);
       $("#occuredAlarmCountSpan").text(success["totalOccuredAlarmCount"]);
       setTimeout(function(){
         getInfo(data);
       }, 5000);
   }, "post", data, function(error) {
+      if(error.status == 400){
+        window.location.href = "/login.html";
+      }
       console.log(error);
       setTimeout(function(){
         getInfo(data);

@@ -1,6 +1,7 @@
 package utc.bab.controller;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import utc.bab.model.Company;
 import utc.bab.model.Gateway;
-import utc.bab.model.GatewayModel;
 import utc.bab.model.Slave;
 import utc.bab.model.dto.GatewayDTO;
 import utc.bab.repository.GatewayRepository;
@@ -27,6 +28,7 @@ import utc.bab.service.UserService;
 @RestController
 @RequestMapping("/gateway")
 public class GatewayController {
+	private static final Logger logger =  Logger.getLogger(GatewayController.class.getSimpleName());
 	@Autowired
 	UserRepository userRepository;
 	@Autowired
@@ -69,11 +71,28 @@ public class GatewayController {
 		gateway = gatewayService.save(gateway);
 		return new ResponseEntity<Gateway>(gateway,HttpStatus.OK);
 	}
-	@RequestMapping(value="/slaves",method=RequestMethod.POST)
-	public List<Slave> getSlaves(@RequestBody Gateway gateway,@RequestBody String token) {
-		List<Slave> list =  slaveRepository.findByGatewayIdOrderByIdDesc(gateway.getId());
+	
+	@RequestMapping(value="/slaves",method=RequestMethod.GET)
+	public ResponseEntity<?> getSlaves(
+			@RequestParam(name="gatewayId",required=true) Integer gatewayId,
+			@RequestParam(name="token",required=true) String token) {
+		if(gatewayId == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		if(token == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		Company companyFromToken = userService.getCompanyFromToken(token);
+		if(companyFromToken == null) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+		Gateway gateway = gatewayService.findById(gatewayId);
+		if(gateway == null) {
+			logger.info("Gateway is null");
+		}
+		List<Slave> slaveList = gateway.getSlaveList();
 		
-		return list;
+		return new ResponseEntity<List<Slave>>(slaveList,HttpStatus.OK);
 	}
 	
 }

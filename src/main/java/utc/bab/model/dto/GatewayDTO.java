@@ -111,4 +111,5 @@ public class GatewayDTO {
 	public void setStatus(DeviceStatus status) {
 		this.status = status;
 	}
+	
 }

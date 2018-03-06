@@ -1,5 +1,6 @@
 package utc.bab;
 
+import java.util.Random;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -10,14 +11,17 @@ import org.springframework.stereotype.Component;
 import utc.bab.model.Company;
 import utc.bab.model.Gateway;
 import utc.bab.model.GatewayModel;
+import utc.bab.model.Slave;
 import utc.bab.model.User;
 import utc.bab.model.UserCompany;
 import utc.bab.repository.CompanyRepository;
 import utc.bab.repository.DeviceValuesRepository;
 import utc.bab.repository.GatewayModelRepository;
 import utc.bab.repository.GatewayRepository;
+import utc.bab.repository.SlaveRepository;
 import utc.bab.repository.UserCompanyRepository;
 import utc.bab.repository.UserRepository;
+import utc.bab.util.RegisterType;
 
 @Component
 public class Test {
@@ -34,6 +38,8 @@ public class Test {
 	DeviceValuesRepository deviceValuesRepository;
 	@Autowired
 	GatewayModelRepository gatewayModelRepository;
+	@Autowired
+	SlaveRepository slaveRepository;
     @PostConstruct
     public void init(){
 		logger.info("Test class init");
@@ -43,10 +49,10 @@ public class Test {
 		user = userRepository.save(user);
 		
 		Company company = new Company();
-		company.setName("Tellioglu");
+		company.setName("Enda");
 		company.setDeviceName("ARCEL");
 		company.setDevicePassword("PASSS");
-		
+		company.setIconUrl("enda.png");
 		company = companyRepository.save(company);
 		UserCompany userCompany = new UserCompany();
 		userCompany.setUserId(user.getId());
@@ -60,6 +66,23 @@ public class Test {
 		client2.setCompanyId(company.getId());
 		
 		client2 = gatewayRepository.save(client2);
+		insertSlaves(client2);
+		
+    }
+    public void insertSlaves(Gateway gateway) {
+    		Random rnd = new Random();
+    		int slaveSize = rnd.nextInt(5 + 2);
+    		for(int i =0;i < slaveSize; i++) {
+    			Slave slave = new Slave();
+    			slave.setGateway(gateway);
+    			slave.setAlias(String.format("Slave%d",(i + 1)));
+    			slave.setDecimalPoint(1);
+    			slave.setRegisterAddress(rnd.nextInt(255));
+    			slave.setRegisterType(RegisterType.values()[rnd.nextInt(RegisterType.values().length)]);
+    			slave.setRequestThreshold(gateway.getRequestDate());
+    			slave = slaveRepository.save(slave);
+    			gateway.getSlaveList().add(slave);
+    		}
     }
     @PostConstruct
     public void insertGatewayModels() {

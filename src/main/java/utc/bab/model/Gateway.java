@@ -1,12 +1,16 @@
 package utc.bab.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Gateway {
@@ -15,7 +19,6 @@ public class Gateway {
 	private int id;
 	private int companyId;
 	private String deviceId;//mac address
-	
 	@ManyToOne(targetEntity=GatewayModel.class)
 	private GatewayModel model;//EDT2411A
 	private int hardwareId; //gateway mi self-control mu 
@@ -24,8 +27,16 @@ public class Gateway {
 	private Date lastRequestDate;
 	private Double lng;
 	private Double lat;
+	@OneToMany(fetch=FetchType.EAGER,mappedBy="gateway")
+	private List<Slave> slaveList = new ArrayList<>();
 	
 	
+	public List<Slave> getSlaveList() {
+		return slaveList;
+	}
+	public void setSlaveList(List<Slave> slaveList) {
+		this.slaveList = slaveList;
+	}
 	public Double getLng() {
 		return lng;
 	}

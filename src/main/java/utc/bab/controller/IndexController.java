@@ -54,60 +54,64 @@ public class IndexController {
 	CompanyLogService companyLogService;
 	@Autowired
 	GatewayService gatewayService;
-	
+
 	@RequestMapping("")
 	public String hello() {
 		return "Hello World!";
 	}
-	
+
 	@RequestMapping("getLatestNews")
-	public List<UserNewsLog> getLatestNews(String token,int companyId, int sensorId){
+	public List<UserNewsLog> getLatestNews(String token, int companyId, int sensorId) {
 		List<UserNewsLog> list = new ArrayList<>();
-		
+
 		return list;
 	}
-	@RequestMapping(value= "socket",method=RequestMethod.POST)
-	public ResponseEntity<?> socketRequest(@RequestBody SocketModel socketModel){
-		
-		Company company = companyRepository.findByDeviceNameAndDevicePassword(socketModel.getDeviceName(), socketModel.getPass());
-		if(company == null) {
+
+	@RequestMapping(value = "socket", method = RequestMethod.POST)
+	public ResponseEntity<?> socketRequest(@RequestBody SocketModel socketModel) {
+
+		Company company = companyRepository.findByDeviceNameAndDevicePassword(socketModel.getDeviceName(),
+				socketModel.getPass());
+		if (company == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Gateway gateway = gatewayRepository.findByCompanyIdAndDeviceId(company.getId(), socketModel.getDeviceId());
-		if(gateway != null) {
+		if (gateway != null) {
 			gateway.setLastRequestDate(new Date());
 			gatewayRepository.save(gateway);
-			
-			//hallet iste geri kalan veriyi de...
-		}else {
-			companyLogService.save(company, Messages.GATEWAY_NOT_INSERTED,socketModel.getDeviceId());
+
+			// hallet iste geri kalan veriyi de...
+		} else {
+			companyLogService.save(company, Messages.GATEWAY_NOT_INSERTED, socketModel.getDeviceId());
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
 	@PostMapping("info")
-	public ResponseEntity<?> companyInfo(@RequestBody String tmp){
+	public ResponseEntity<?> companyInfo(@RequestBody String tmp) {
 		JSONObject json = new JSONObject(tmp);
 		String token = null;
 		try {
-			token = json.getString("token");	
-		}catch(Exception ex) {
+			token = json.getString("token");
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Company company = userService.getCompanyFromToken(token);
-		if(company == null) {
+		if (company == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		CompanyDeviceInfoDTO companyDeviceInfo = new CompanyDeviceInfoDTO();
 		companyDeviceInfo.setCompany(company);
-		
+
 		List<Gateway> gateways = gatewayRepository.findByCompanyId(company.getId());
+		gatewayService.dummySlaveValues(gateways);
 		
 		companyDeviceInfo.setTotalGatewayCount(gateways.size());
 		Date dateNow = new Date();
-		for(int i =0;i<gateways.size();i++) {
-			//gateway icin calisip calismadigi test edilecek...
+		for (int i = 0; i < gateways.size(); i++) {
+			// gateway icin calisip calismadigi test edilecek...
 			DeviceStatus gatewayStatus = gatewayService.getGatewayStatus(gateways.get(i));
 			switch (gatewayStatus) {
 			case BROKEN:
@@ -122,37 +126,36 @@ public class IndexController {
 			default:
 				break;
 			}
-			
+
 			List<Slave> slaves = slaveRepository.findByGatewayIdOrderByIdDesc(gateways.get(i).getId());
-			//slave sayisini kumulatif bir sekilde toplayacak!
+			// slave sayisini kumulatif bir sekilde toplayacak!
 			companyDeviceInfo.setTotalSlaveCount(companyDeviceInfo.getTotalSlaveCount() + slaves.size());
-			for(int j =0 ;j<slaves.size();j++) {
+			for (int j = 0; j < slaves.size(); j++) {
 				Slave slave = slaves.get(j);
 				SlaveValues slaveValues = slaveValuesRepository.findLatestSlaveId(slave.getId());
-				if(slaveValues != null) {
+				if (slaveValues != null) {
 					Date requestedDate = slaveValues.getDate();
 					long threshedTime = dateNow.getTime() - requestedDate.getTime();
-					if(threshedTime > slave.getRequestThreshold()) {
-						//sure cok bozulmus olabilir
-						if(threshedTime > slave.getRequestThreshold() * 2) {
-							//kesin gecikmis!
+					if (threshedTime > slave.getGateway().getRequestDate()) {
+						// sure cok bozulmus olabilir
+						if (threshedTime > slave.getRequestThreshold() * 2) {
+							// kesin gecikmis!
 							companyDeviceInfo.setBrokenSlaveCount(companyDeviceInfo.getBrokenSlaveCount() + 1);
-						}else {
-							//bekliyor
+						} else {
+							// bekliyor
 							companyDeviceInfo.setUnknownSlaveCount(companyDeviceInfo.getUnknownSlaveCount() + 1);
 						}
-					}else {
-						//sure az calisiyo
+					} else {
+						// sure az calisiyo
 						companyDeviceInfo.setWorkingSlaveCount(companyDeviceInfo.getWorkingSlaveCount() + 1);
 					}
-				}else {
+				} else {
 					companyDeviceInfo.setUnknownSlaveCount(companyDeviceInfo.getUnknownSlaveCount() + 1);
 				}
-				
+
 			}
 		}
 		return new ResponseEntity<CompanyDeviceInfoDTO>(companyDeviceInfo, HttpStatus.OK);
 	}
-	
 
 }

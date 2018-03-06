@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-4 box3">
+    <div class="col-sm-4 box3 deviceBox">
       <div>
 
         <div class="col-sm-6">
@@ -32,7 +32,79 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-4 box3">
+    <div class="col-sm-4 box3 deviceBox">
+      <div>
+        <div class="col-sm-6">
+          <div class="boxHeader">
+            <span>Alias</span>
+          </div>
+          <div class="blueRing">
+            <span class="ringTextBlue">
+                <i class="fa fa-dashboard fa-lg"></i>
+              </span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div style="margin-top:80px;">
+            <span class="boxInfoCenterSpan">73 </span> <span class="boxInfoCenterSpan">P</span></br>
+            <span class="text-right boxInfoSpan">155</span></br>
+            <span class="text-right boxInfoSpan">Holding Register</span></br>
+            <span class="text-right boxInfoSpan">0x02</span></br>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 box3 deviceBox">
+      <div>
+        <div class="col-sm-6">
+          <div class="boxHeader">
+            <span>Alias</span>
+          </div>
+          <div class="blueRing">
+            <span class="ringTextBlue">
+                <i class="fa fa-dashboard fa-lg"></i>
+              </span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div style="margin-top:80px;">
+            <span class="boxInfoCenterSpan">73 </span> <span class="boxInfoCenterSpan">P</span></br>
+            <span class="text-right boxInfoSpan">155</span></br>
+            <span class="text-right boxInfoSpan">Holding Register</span></br>
+            <span class="text-right boxInfoSpan">0x02</span></br>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 box3 deviceBox">
+      <div>
+        <div class="col-sm-6">
+          <div class="boxHeader">
+            <span>Alias</span>
+          </div>
+          <div class="blueRing">
+            <span class="ringTextBlue">
+                <i class="fa fa-dashboard fa-lg"></i>
+              </span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div style="margin-top:80px;">
+            <span class="boxInfoCenterSpan">73 </span> <span class="boxInfoCenterSpan">P</span></br>
+            <span class="text-right boxInfoSpan">155</span></br>
+            <span class="text-right boxInfoSpan">Holding Register</span></br>
+            <span class="text-right boxInfoSpan">0x02</span></br>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 box3 deviceBox">
       <div>
         <div class="col-sm-6">
           <div class="boxHeader">
@@ -57,19 +129,75 @@
       </div>
     </div>
   </div>
-  <div class="row">
-    <ul class="nav nav-tabs nav-justified">
+  <div class="row col-sm-9" style="margin-top:10px;">
+  <!--  <ul class="nav nav-tabs nav-justified">
       <li class="active"><a href="#">Home</a></li>
       <li><a href="#">Menu 1</a></li>
       <li><a href="#">Menu 2</a></li>
       <li><a href="#">Menu 3</a></li>
-    </ul>
+    </ul> -->
+    <table class="table table-condensed" id="details">
+      <thead>
+        <tr>
+          <th>Gateway</th>
+          <th>Alias</th>
+          <th>Modbus ID</th>
+          <th>Type</th>
+          <th>Modbus Register No</th>
+          <th>Value</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Abdullah</td>
+          <td>Insan</td>
+          <td>155</td>
+          <td>Colins</td>
+          <td>213</td>
+          <td>x 0.1 (C)</td>
+          <td>25.02.1993</td>
+        </tr>
+        <tr>
+          <td>Abdullah</td>
+          <td>Insan</td>
+          <td>155</td>
+          <td>Colins</td>
+          <td>213</td>
+          <td>x 0.1 (C)</td>
+          <td>25.02.1993</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+
+
 
 </div>
 
 <script>
-  new Chart(document.getElementById("line-chart"), {
+$(document).ready(function(){
+  $("#details").hide();
+  $(".deviceBox").click(function(e){
+    $("#details").show();
+    $(".deviceBox").find("div").css({"background-color":"rgb(45,53,61)"});
+    $(this).find("div").css({"background-color":"rgb(33,37,43)"});
+  });
+
+});
+function loadAllSlaves(){
+  var data = {
+    "gatewayId" : selectedGatewayId,
+    "token" : token,
+  };
+  request("gateway/slaves", function(success) {
+    
+  }, "get", data, function(error) {
+
+  });
+}
+
+/*  new Chart(document.getElementById("line-chart"), {
     type: 'line',
     data: {
       labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
@@ -106,5 +234,6 @@
         text: 'World population per region (in millions)'
       }
     }
-  });
+  });*/
+
 </script>

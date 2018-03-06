@@ -230,6 +230,10 @@
           var gatewayId = $(this).data('gatewayid');
           selectedGatewayId = gatewayId;
         });
+        $(".showDetailButton").click(function(){
+          selectedGatewayId = $(this).data('gatewayid');
+          loadContainer("device.html");
+        });
       });
     }, function(error) {
       console.log(error);
@@ -279,7 +283,7 @@
 
   function getActionButtons(gatewayId) {
     var html = "";
-    html += '<td><button class="btn btn-primary" title="Detay göster"><i class="fa fa-info fa-lg"></i></button> ';
+    html += '<td><button class="btn btn-primary showDetailButton" title="Detay göster" data-gatewayId="'+gatewayId+'"><i class="fa fa-info fa-lg"></i></button> ';
     html += '<button class="btn btn-default" title="Mesaj Gonder"><i class="fa fa-envelope fa-lg"></i></button> ';
     html += '<button class="btn btn-success addSlaveButton" data-gatewayId="' + gatewayId + '" title="Yeni bir cihaz ekle" data-toggle="modal" data-target="#addDeviceModal"><i class="fa fa-plus fa-lg"></i></button></td>'
     return html;

@@ -15,6 +15,7 @@ import utc.bab.model.Slave;
 import utc.bab.repository.GatewayRepository;
 import utc.bab.service.SlaveService;
 import utc.bab.service.UserService;
+import utc.bab.util.RegisterType;
 
 @RestController
 @RequestMapping("/slave")
@@ -41,11 +42,12 @@ public class SlaveController {
 		}
 		
 		Slave slave = new Slave();
-		slave.setGatewayId(gateway.getId());
+		
+		//slave.setGatewayId(gateway.getId());
 		slave.setAlias(slaveObject.optString("alias"));
 		slave.setDecimalPoint(slaveObject.getInt("decimalPoint"));
-		slave.setSlaveId(slaveObject.getInt("slaveId"));
-		slave.setRegisterType(slaveObject.getInt("registerType"));
+		//slave.setSlaveId(slaveObject.getInt("slaveId"));
+		slave.setRegisterType(RegisterType.values()[slaveObject.getInt("registerType")]);
 		
 		slave = slaveService.save(slave);
 		

@@ -10,9 +10,12 @@ import org.springframework.stereotype.Service;
 
 import utc.bab.model.Company;
 import utc.bab.model.Gateway;
+import utc.bab.model.Slave;
+import utc.bab.model.SlaveValues;
 import utc.bab.model.dto.GatewayDTO;
 import utc.bab.repository.GatewayRepository;
 import utc.bab.repository.SlaveRepository;
+import utc.bab.repository.SlaveValuesRepository;
 import utc.bab.util.DeviceStatus;
 
 @Service
@@ -24,6 +27,8 @@ public class GatewayService {
 	GatewayRepository gatewayRepository;
 	@Autowired
 	SlaveRepository slaveRepository;
+	@Autowired
+	SlaveValuesRepository slaveValuesRepository;
 	public List<GatewayDTO> getGatewaysFromUserToken(String token){
 		if(token == null)
 			return null;
@@ -38,7 +43,7 @@ public class GatewayService {
 			GatewayDTO gatDto = new GatewayDTO(gateway);
 			gatDto.setStatus(getGatewayStatus(gateway));
 			gatDto.setCompany(company);
-			gatDto.setSlaves(slaveRepository.findByGatewayIdOrderByIdDesc(gateway.getId()));
+			gatDto.setSlaves(gateway.getSlaveList());
 			
 			dtoList.add(gatDto);
 		}
@@ -65,5 +70,27 @@ public class GatewayService {
 		}else {
 			return DeviceStatus.WORKING;
 		}
+	}
+	public void dummySlaveValues(List<Gateway> gateways) {
+		for(int i =0; i< gateways.size() ; i++) {
+			dummySlaveValues(gateways.get(i));
+		}
+	}
+	
+	public void dummySlaveValues(Gateway gateway) {
+		List<Slave> slaveList = gateway.getSlaveList();
+		for(int i = 0 ;i < slaveList.size();i++) {
+			Slave slave = slaveList.get(i);
+			SlaveValues slaveValues = new SlaveValues();
+			slaveValues.setDate(new Date());
+			slaveValues.setSlave(slave);
+			slaveValues.setData("asdfsaf");
+			slaveValues = slaveValuesRepository.save(slaveValues);
+			slave.getSlaveValues().add(slaveValues);
+			
+		}
+	}
+	public Gateway findById(Integer gatewayId) {
+		return gatewayRepository.findOne(gatewayId);
 	}
 }
