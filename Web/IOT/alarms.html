@@ -80,39 +80,46 @@
     loadTable();
   });
 
+  function buttonclickevents() {
+    $(".deleteAlert").click(function() {
+      var data = {
+        'id': $(this).data("alertid"),
+      };
+      request("alert/delete", function(data) {
+        loadTable();
+        notificate('Bir Alarm Silindi', '', 'success');
+      }, "post", data, function(error) {
+        notificate('HATA', 'Silme islemi basarisiz', 'danger');
+      });
+      return false;
+    });
+    $(".pauseAlert").click(function() {
+      var data = {
+        'id': $(this).data("alertid"),
+      };
+      request("alert/pause", function(data) {
+        loadTable();
+        if (data["active"] == true) {
+          notificate('Bir Alarm Calistirildi', '', 'success');
+        } else {
+          notificate('Bir Alarm Durduruldu', '', 'success');
+        }
+
+      }, "post", data, function(error) {
+        notificate('HATA', 'Alarm durdurma islemi basarisiz', 'danger');
+      });
+      return false;
+    });
+  }
+
   function loadTable() {
     getRequest("alert/list?token=" + token, function(data) {
       $("#alertsTableBody").html("");
       $.each(data, function(index) {
         $("#alertsTableBody").append(rowString(data[index]));
-        $(".deleteAlert").click(function() {
-          var data = {
-            'id': $(this).data("alertid"),
-          };
-          request("alert/delete", function(data) {
-            loadTable();
-            notificate('Bir Alarm Silindi', 'Alarm silme basarili', 'success');
-          }, "post", data, function(error) {
-            notificate('HATA', 'Silme islemi basarisiz', 'danger');
-          })
-        });
-        $(".pauseAlert").click(function() {
-          var data = {
-            'id': $(this).data("alertid"),
-          };
-          request("alert/pause", function(data) {
-            loadTable();
-            if (data["active"] == true) {
-              notificate('Bir Alarm Calistirildi', '', 'success');
-            } else {
-              notificate('Bir Alarm Durduruldu', '', 'success');
-            }
 
-          }, "post", data, function(error) {
-            notificate('HATA', 'Alarm durdurma islemi basarisiz', 'danger');
-          })
-        });
       });
+      buttonclickevents();
     }, function(error) {
       console.log(error);
       notificate('HATA', 'Liste yuklenemedi', 'danger');
