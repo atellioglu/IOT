@@ -8,12 +8,14 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import utc.bab.model.Alert;
 import utc.bab.model.Company;
 import utc.bab.model.Gateway;
 import utc.bab.model.GatewayModel;
 import utc.bab.model.Slave;
 import utc.bab.model.User;
 import utc.bab.model.UserCompany;
+import utc.bab.repository.AlertRepository;
 import utc.bab.repository.CompanyRepository;
 import utc.bab.repository.DeviceValuesRepository;
 import utc.bab.repository.GatewayModelRepository;
@@ -40,6 +42,8 @@ public class Test {
 	GatewayModelRepository gatewayModelRepository;
 	@Autowired
 	SlaveRepository slaveRepository;
+	@Autowired
+	AlertRepository alertRepository;
     @PostConstruct
     public void init(){
 		logger.info("Test class init");
@@ -82,6 +86,19 @@ public class Test {
     			slave.setRequestThreshold(gateway.getRequestDate());
     			slave = slaveRepository.save(slave);
     			gateway.getSlaveList().add(slave);
+    		}
+    }
+    @PostConstruct
+    public void insertAlerts() {
+    		Random rnd = new Random();
+    		int alertSize = rnd.nextInt(5)+ 2;
+    		for(int i =0; i< alertSize;i++) {
+    			Alert alert = new Alert();
+    			alert.setName("Sunum Alarm - " + (i+1));
+    			alert.setLowlim(rnd.nextInt(100));
+    			alert.setUpLim(rnd.nextInt(100) + alert.getLowLim() + 10);
+    			alert.setActive(rnd.nextInt(2) == 1 ? true : false);
+    			alertRepository.save(alert);
     		}
     }
     @PostConstruct

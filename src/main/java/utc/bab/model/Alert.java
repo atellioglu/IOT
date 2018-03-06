@@ -6,22 +6,26 @@ import javax.persistence.Id;
 
 @Entity
 public class Alert {
+	//TODO company veya user listesi yok
 	@Id
 	@GeneratedValue
-	private int id;
+	private Long id;
 	private String name;
+	private int lowLim;
+	private int sensorId;
+	private int upLim;
+	private boolean active;
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	private int sensorId;
-	private int upLim;
-	public int getId() {
+	
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public int getSensorId() {
@@ -36,12 +40,18 @@ public class Alert {
 	public void setUpLim(int upLim) {
 		this.upLim = upLim;
 	}
-	public int getLowlim() {
-		return lowlim;
+	public int getLowLim() {
+		return lowLim;
 	}
-	public void setLowlim(int lowlim) {
-		this.lowlim = lowlim;
+	public void setLowlim(int lowLim) {
+		this.lowLim = lowLim;
 	}
-	private int lowlim;
+	
+	public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 	
 }

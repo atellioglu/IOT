@@ -1,0 +1,165 @@
+<div style="margin-left:23%;">
+
+  <div class="container">
+    <div style="position:absolute; right:10;top:30;">
+      <button class="btn btn-default" data-toggle="modal" data-target="#addAlarmModal" title="Yeni Alarm Ekle"><i class="fa fa-plus fa-lg"></i> Yeni Alarm Ekle</button>
+    </div>
+
+    <h2>Cihazlar</h2>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Alarm İsmi</th>
+          <th>Alt Limit</th>
+          <th>Üst Limit</th>
+          <th>Aktif Durumu</th>
+          <th>Aksiyonlar</th>
+        </tr>
+      </thead>
+      <tbody id="alertsTableBody">
+      </tbody>
+    </table>
+  </div>
+</div>
+<div id="addAlarmModal" class="modal fade" role="dialog">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+        <h4 class="modal-title" style="color:black;">Yeni Alarm Ekle</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="cihazTakmaAdı" style="color:black">Alarm İsmi</label>
+            <input type="text" class="form-control" name="alertName" placeholder="Alarmın ismini buraya giriniz." />
+            <small id="emailHelp" class="form-text text-muted">Alarm ismi girmek alarmlarınızı tanımlamaya yardımcı olur.</small>
+          </div>
+          <div class="form-group">
+            <label style="color:black">Alt Limit Değeri</label>
+            <input type="text" class="form-control" name="alertLowLim" placeholder="Alt limit değerini buraya giriniz." />
+            <small id="emailHelp" class="form-text text-muted">Alt limit değeri alarmın uyarı vermesi için gereklidir.</small>
+          </div>
+          <div class="form-group">
+            <label style="color:black">Üst Limit Değeri</label>
+            <input type="text" class="form-control" name="alertUpLim" placeholder="Üst limit değerini buraya giriniz." />
+            <small id="emailHelp" class="form-text text-muted">Üst limit değeri alarmın uyarı vermesi için gereklidir.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="exampleFormControlSelect1" style="color:black">Alarmın çalışacağı <b>slave</b> cihaz tiplerini seçiniz.</label>
+            <select class="form-control" id="slaveModelSelect">
+             <option value="1">Slave Tipi Test1(Sicaklik Sensor)</option>
+             <option value="1">Slave Tipi Test2(Nem Sensor)</option>
+             <option value="1">Slave Tipi Test3(Konum Sensor)</option>
+           </select>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+            <label class="form-check-label" for="inlineCheckbox1" style="color:black">Email ile bildir</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" disabled>
+            <label class="form-check-label" for="inlineCheckbox2" style="color:black">Sms ile bildir</label>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="return modalAddButtonClick();" class="btn btn-success" data-dismiss="modal"><i class="fa fa-plus fa-lg"></i> Kaydet</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close fa-lg"></i> Çıkış Yap</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    loadTable();
+  });
+
+  function loadTable() {
+    getRequest("alert/list?token=" + token, function(data) {
+      $("#alertsTableBody").html("");
+      $.each(data, function(index) {
+        $("#alertsTableBody").append(rowString(data[index]));
+        $(".deleteAlert").click(function() {
+          var data = {
+            'id': $(this).data("alertid"),
+          };
+          request("alert/delete", function(data) {
+            loadTable();
+            notificate('Bir Alarm Silindi', 'Alarm silme basarili', 'success');
+          }, "post", data, function(error) {
+            notificate('HATA', 'Silme islemi basarisiz', 'danger');
+          })
+        });
+        $(".pauseAlert").click(function() {
+          var data = {
+            'id': $(this).data("alertid"),
+          };
+          request("alert/pause", function(data) {
+            loadTable();
+            if (data["active"] == true) {
+              notificate('Bir Alarm Calistirildi', '', 'success');
+            } else {
+              notificate('Bir Alarm Durduruldu', '', 'success');
+            }
+
+          }, "post", data, function(error) {
+            notificate('HATA', 'Alarm durdurma islemi basarisiz', 'danger');
+          })
+        });
+      });
+    }, function(error) {
+      console.log(error);
+      notificate('HATA', 'Liste yuklenemedi', 'danger');
+    });
+  }
+
+  function rowString(elem) {
+    var html = "<tr class='success' style='color:black'>";
+    html += "<td>" + elem["name"] + "</td>";
+    html += "<td>" + elem["lowLim"] + "</td>";
+    html += "<td>" + elem["upLim"] + "</td>";
+    if (elem["active"] == false) {
+      html += "<td> <span style='color:red'>AKTİF DEĞİL</span></td>";
+    } else {
+      html += "<td> <span style='color:green'>AKTİF </span></td>";
+    }
+    html += getActionButtons(elem["id"]);
+    html += "</tr>";
+    return html;
+  }
+
+  function getActionButtons(alertId) {
+    var html = "";
+    html += '<td><button class="btn btn-danger deleteAlert" title="Alarmi Sil" data-alertid="' + alertId + '"><i class="fa fa-minus fa-lg"></i></button> ';
+    html += '<button class="btn btn-warning pauseAlert" title="Alarmi Durdur" data-alertid="' + alertId + '"><i class="fa fa-pause fa-lg"></i></button> ';
+    html += '<button class="btn btn-success" title="Kullanici Ekle" data-toggle="modal"><i class="fa fa-user fa-lg"></i></button></td>'
+    return html;
+  }
+
+  function modalAddButtonClick() {
+
+    var alertName = $("input[name=alertName]").val();
+    var alertLowLim = $("input[name=alertLowLim]").val();
+    var alertUpLim = $("input[name=alertUpLim]").val();
+    var data = {
+      'name': alertName,
+      'upLim': alertUpLim,
+      'lowLim': alertLowLim,
+      'active': true,
+    };
+    request("alert/insert", function(success) {
+      loadTable();
+      notificate('Bir Alarm Eklendi', 'Alarm ekleme basarili', 'success');
+      console.log(success);
+    }, "post", data, function(error) {
+      console.log(error);
+    });
+    return false;
+  }
+</script>

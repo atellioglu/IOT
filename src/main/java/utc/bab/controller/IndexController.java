@@ -21,6 +21,7 @@ import utc.bab.model.Gateway;
 import utc.bab.model.Slave;
 import utc.bab.model.SlaveValues;
 import utc.bab.model.SocketModel;
+import utc.bab.repository.AlertRepository;
 import utc.bab.repository.CompanyRepository;
 import utc.bab.repository.DeviceValuesRepository;
 import utc.bab.repository.GatewayRepository;
@@ -54,7 +55,8 @@ public class IndexController {
 	CompanyLogService companyLogService;
 	@Autowired
 	GatewayService gatewayService;
-
+	@Autowired 
+	AlertRepository alertRepository;
 	@RequestMapping("")
 	public String hello() {
 		return "Hello World!";
@@ -101,10 +103,10 @@ public class IndexController {
 		if (company == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-
+		
 		CompanyDeviceInfoDTO companyDeviceInfo = new CompanyDeviceInfoDTO();
 		companyDeviceInfo.setCompany(company);
-
+		companyDeviceInfo.setTotalAlarmCount(alertRepository.findAll().size());
 		List<Gateway> gateways = gatewayRepository.findByCompanyId(company.getId());
 		gatewayService.dummySlaveValues(gateways);
 		
